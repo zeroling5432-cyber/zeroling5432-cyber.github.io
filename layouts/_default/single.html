@@ -1,0 +1,193 @@
+{{- define "main" }}
+
+{{- $categories := .GetTerms "categories" }}
+{{- $tags := .GetTerms "tags" }}
+{{- $seriesTerms := .GetTerms "series" }}
+{{- $seriesPage := "" }}
+{{- $seriesEntries := slice }}
+{{- if gt (len $seriesTerms) 0 }}
+{{- $seriesPage = index $seriesTerms 0 }}
+{{- $seriesEntries = $seriesPage.Pages.ByDate }}
+{{- end }}
+
+<section class="single-shell">
+  <header class="single-hero glass-panel">
+    <div class="single-hero-main">
+      {{- partial "breadcrumbs.html" . }}
+
+      <div class="note-badges single-badges">
+        {{- range first 1 $categories }}
+        <a class="note-badge type" href="{{ .Permalink }}">{{ .LinkTitle }}</a>
+        {{- end }}
+        {{- range first 1 $seriesTerms }}
+        <a class="note-badge series" href="{{ .Permalink }}">连载 · {{ .LinkTitle }}</a>
+        {{- end }}
+        {{- if .Draft }}
+        <span class="note-badge draft">Draft</span>
+        {{- end }}
+      </div>
+
+      <h1 class="post-title entry-hint-parent">{{ .Title }}</h1>
+
+      {{- if .Description }}
+      <p class="single-summary">{{ .Description | markdownify }}</p>
+      {{- else if .Summary }}
+      <p class="single-summary">{{ .Summary | plainify | htmlUnescape }}</p>
+      {{- end }}
+
+      <div class="single-meta-grid">
+        <div class="meta-chip">
+          <span>发布时间</span>
+          <strong>{{ .Date | time.Format site.Params.DateFormat }}</strong>
+        </div>
+        <div class="meta-chip">
+          <span>阅读时间</span>
+          <strong>{{ i18n "read_time" .ReadingTime | default (printf "%d 分钟" .ReadingTime) }}</strong>
+        </div>
+        <div class="meta-chip">
+          <span>字数</span>
+          <strong>{{ i18n "words" .WordCount | default (printf "%d 字" .WordCount) }}</strong>
+        </div>
+        {{- if and (not .Lastmod.IsZero) (ne .Lastmod.Unix .Date.Unix) }}
+        <div class="meta-chip">
+          <span>最后更新</span>
+          <strong>{{ .Lastmod | time.Format site.Params.DateFormat }}</strong>
+        </div>
+        {{- end }}
+      </div>
+    </div>
+
+    <aside class="single-hero-side">
+      {{- if .Params.cover.image }}
+      <div class="single-cover">
+        {{- partial "cover.html" (dict "cxt" . "IsSingle" true "isHidden" false) }}
+      </div>
+      {{- else }}
+      <div class="single-cover-fallback">
+        <p class="panel-kicker">Note Intent</p>
+        <h2>常看常新，常学常精</h2>
+        <p>这一页展示了当前内容的分类、连载和关键词，更适合做阶段性笔记。</p>
+      </div>
+      {{- end }}
+
+      <div class="single-side-block">
+        <p class="panel-kicker">阅读线索</p>
+        <ul class="detail-list">
+          <li>
+            <span>作者</span>
+            <strong>{{ partial "author.html" . }}</strong>
+          </li>
+          <li>
+            <span>分类</span>
+            <strong>
+              {{- if gt (len $categories) 0 -}}
+              {{- range $index, $item := $categories -}}
+              {{- if $index }}, {{ end -}}{{ $item.LinkTitle }}
+              {{- end -}}
+              {{- else -}}
+              未设置
+              {{- end -}}
+            </strong>
+          </li>
+          <li>
+            <span>连载</span>
+            <strong>
+              {{- if gt (len $seriesTerms) 0 -}}
+              {{- range $index, $item := $seriesTerms -}}
+              {{- if $index }}, {{ end -}}{{ $item.LinkTitle }}
+              {{- end -}}
+              {{- else -}}
+              独立文章
+              {{- end -}}
+            </strong>
+          </li>
+          <li>
+            <span>关键词</span>
+            <strong>{{ len $tags }} 个标签</strong>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </header>
+
+  <section class="single-grid">
+    <article class="post-single glass-panel article-panel">
+      {{- if .Content }}
+      <div class="post-content">
+        {{- if not (.Param "disableAnchoredHeadings") }}
+        {{- partial "anchored_headings.html" .Content -}}
+        {{- else }}{{ .Content }}{{ end }}
+      </div>
+      {{- end }}
+
+      <footer class="post-footer">
+        {{- if gt (len $tags) 0 }}
+        <ul class="post-tags">
+          {{- range $tags }}
+          <li><a href="{{ .Permalink }}">{{ .LinkTitle }}</a></li>
+          {{- end }}
+        </ul>
+        {{- end }}
+
+        {{- if (.Param "ShowPostNavLinks") }}
+        {{- partial "post_nav_links.html" . }}
+        {{- end }}
+      </footer>
+
+      {{- if (.Param "comments") }}
+      {{- partial "comments.html" . }}
+      {{- end }}
+    </article>
+
+    <aside class="single-aside">
+      {{- if (.Param "ShowToc") }}
+      <div class="glass-panel aside-card toc-panel">
+        {{- partial "toc.html" . }}
+      </div>
+      {{- end }}
+
+      {{- if gt (len $seriesTerms) 0 }}
+      <div class="glass-panel aside-card series-panel">
+        <p class="panel-kicker">连载进度</p>
+        <h3><a href="{{ $seriesPage.Permalink }}">{{ $seriesPage.LinkTitle }}</a></h3>
+        <ol class="series-list">
+          {{- range $seriesEntries }}
+          <li{{ if eq .Permalink $.Permalink }} class="current"{{ end }}>
+            <a href="{{ .Permalink }}">{{ .Title }}</a>
+            <time datetime="{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}">{{ .Date | time.Format site.Params.DateFormat }}</time>
+          </li>
+          {{- end }}
+        </ol>
+      </div>
+      {{- end }}
+
+      {{- if or (gt (len $categories) 0) (gt (len $tags) 0) }}
+      <div class="glass-panel aside-card taxonomy-panel">
+        <p class="panel-kicker">索引</p>
+        {{- if gt (len $categories) 0 }}
+        <div class="aside-taxonomy-group">
+          <h3>分类</h3>
+          <div class="aside-chip-list">
+            {{- range $categories }}
+            <a href="{{ .Permalink }}">{{ .LinkTitle }}</a>
+            {{- end }}
+          </div>
+        </div>
+        {{- end }}
+        {{- if gt (len $tags) 0 }}
+        <div class="aside-taxonomy-group">
+          <h3>标签</h3>
+          <div class="aside-chip-list">
+            {{- range $tags }}
+            <a href="{{ .Permalink }}">#{{ .LinkTitle }}</a>
+            {{- end }}
+          </div>
+        </div>
+        {{- end }}
+      </div>
+      {{- end }}
+    </aside>
+  </section>
+</section>
+
+{{- end }}

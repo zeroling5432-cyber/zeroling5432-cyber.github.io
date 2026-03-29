@@ -1,0 +1,21 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="g1" x1="40" y1="34" x2="216" y2="222" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F7E8D8"/>
+      <stop offset="1" stop-color="#E3A983"/>
+    </linearGradient>
+    <linearGradient id="g2" x1="70" y1="78" x2="186" y2="186" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C66F45"/>
+      <stop offset="1" stop-color="#8F4122"/>
+    </linearGradient>
+  </defs>
+  <rect x="8" y="8" width="240" height="240" rx="48" fill="url(#g1)"/>
+  <circle cx="128" cy="98" r="42" fill="#FFF8F2"/>
+  <path d="M76 192C82 156 102 136 128 136C154 136 174 156 180 192" fill="#FFF8F2"/>
+  <path d="M94 95C101 73 121 60 141 62C157 64 171 77 174 95C164 86 149 83 136 86C119 90 105 101 94 95Z" fill="url(#g2)"/>
+  <rect x="148" y="142" width="54" height="66" rx="16" fill="#FFF8F2"/>
+  <rect x="160" y="158" width="30" height="6" rx="3" fill="#D89A74"/>
+  <rect x="160" y="172" width="22" height="6" rx="3" fill="#D89A74"/>
+  <path d="M194 74L198 82L206 86L198 90L194 98L190 90L182 86L190 82L194 74Z" fill="#FFF8F2"/>
+  <path d="M62 140L66 148L74 152L66 156L62 164L58 156L50 152L58 148L62 140Z" fill="#F9F0E6"/>
+</svg>

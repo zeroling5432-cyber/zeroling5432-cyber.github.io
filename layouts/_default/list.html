@@ -1,0 +1,101 @@
+{{- define "main" }}
+
+{{- $pages := .Pages }}
+{{- if eq .Kind "section" }}
+{{- $pages = .RegularPages }}
+{{- end }}
+{{- $paginator := .Paginate $pages }}
+{{- $wordCount := 0 }}
+{{- range $pages }}
+{{- $wordCount = add $wordCount .WordCount }}
+{{- end }}
+
+<section class="page-shell">
+  <header class="page-hero glass-panel">
+    <div class="page-hero-copy">
+      {{- partial "breadcrumbs.html" . }}
+      <p class="section-kicker">
+        {{- if and (eq .Kind "section") (eq .Type "posts") -}}
+        Notebook Index
+        {{- else if eq .Kind "term" -}}
+        Term Archive
+        {{- else -}}
+        Glass Archive
+        {{- end -}}
+      </p>
+      <h1>{{ .Title }}</h1>
+      {{- if .Description }}
+      <div class="page-description">
+        {{ .Description | markdownify }}
+      </div>
+      {{- else if and (eq .Kind "section") (eq .Type "posts") }}
+      <div class="page-description">
+        <p>这里集中收纳数学札记、技术博客与兴趣爱好，也会把同一主题下的连载内容慢慢接起来。</p>
+      </div>
+      {{- end }}
+    </div>
+
+    <div class="page-hero-meta">
+      <div class="page-stat">
+        <strong>{{ len $pages }}</strong>
+        <span>篇内容</span>
+      </div>
+      <div class="page-stat">
+        <strong>{{ $wordCount }}</strong>
+        <span>总字数</span>
+      </div>
+      <div class="page-stat">
+        <strong>{{ len site.Taxonomies.series }}</strong>
+        <span>连载主题</span>
+      </div>
+    </div>
+  </header>
+
+  {{- if .Content }}
+  <div class="glass-panel page-copy">
+    <div class="post-content">
+      {{- if not (.Param "disableAnchoredHeadings") }}
+      {{- partial "anchored_headings.html" .Content -}}
+      {{- else }}{{ .Content }}{{ end }}
+    </div>
+  </div>
+  {{- end }}
+
+  {{- if gt (len $paginator.Pages) 0 }}
+  <div class="note-list">
+    {{- range $paginator.Pages }}
+    {{- partial "note_card.html" (dict "page" . "class" "page-note-card") }}
+    {{- end }}
+  </div>
+  {{- else }}
+  <div class="empty-state glass-panel">
+    <h3>这里暂时还没有内容</h3>
+    <p>等新的笔记或游记发布后，这里会自动补上。</p>
+  </div>
+  {{- end }}
+
+  {{- if gt $paginator.TotalPages 1 }}
+  <footer class="page-footer">
+    <nav class="pagination">
+      {{- if $paginator.HasPrev }}
+      <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">
+        «&nbsp;{{ i18n "prev_page" }}&nbsp;
+        {{- if (.Param "ShowPageNums") }}
+        {{- sub $paginator.PageNumber 1 }}/{{ $paginator.TotalPages }}
+        {{- end }}
+      </a>
+      {{- end }}
+      {{- if $paginator.HasNext }}
+      <a class="next" href="{{ $paginator.Next.URL | absURL }}">
+        {{- i18n "next_page" }}&nbsp;
+        {{- if (.Param "ShowPageNums") }}
+        {{- add 1 $paginator.PageNumber }}/{{ $paginator.TotalPages }}
+        {{- end }}&nbsp;»
+      </a>
+      {{- end }}
+    </nav>
+  </footer>
+  {{- end }}
+</section>
+
+{{- end }}

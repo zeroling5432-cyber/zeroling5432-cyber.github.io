@@ -1,0 +1,26 @@
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- with site.Params.noteKinds }}
+<section class="focus-section">
+  <header class="section-heading">
+    <div>
+      <p class="section-kicker">Categories</p>
+      <h2>分门别类</h2>
+    </div>
+  </header>
+
+  <div class="track-grid">
+    {{- range . }}
+    {{- $count := len (where $pages "Params.categories" "intersect" (slice .name)) }}
+    <article class="track-card">
+      <p class="track-kicker">{{ .eyebrow }}</p>
+      <h3>{{ .name }}</h3>
+      <p class="track-summary">{{ .summary }}</p>
+      <p class="track-detail">{{ .detail }}</p>
+      <div class="track-footer">
+        <span class="track-count">{{ $count }} 篇</span>
+      </div>
+    </article>
+    {{- end }}
+  </div>
+</section>
+{{- end }}

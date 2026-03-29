@@ -1,0 +1,141 @@
+{{- define "main" }}
+
+{{- $pages := where site.RegularPages "Type" "in" site.Params.mainSections }}
+{{- $pages = where $pages "Params.hiddenInHomeList" "!=" true }}
+{{- $paginator := .Paginate $pages }}
+{{- $hero := site.Params.hero }}
+{{- $heroTitle := $hero.title | default site.Title }}
+{{- $heroContact := $hero.contact | default site.Title }}
+{{- $postCount := len $pages }}
+{{- $categoryCount := len site.Taxonomies.categories }}
+{{- $seriesCount := len site.Taxonomies.series }}
+
+<section class="home-shell">
+  <article class="home-hero-card">
+    <div class="home-hero-copy">
+      {{- with $hero.greeting }}
+      <p class="home-eyebrow">{{ . }}</p>
+      {{- end }}
+      <h1>{{ $heroTitle | markdownify }}</h1>
+      {{- with $hero.subtitle }}
+      {{- $lines := split . "\n" }}
+      <div class="home-tagline" aria-label="研究方向">
+        {{- range $lines }}
+        {{- $line := trim . " \n\r\t" }}
+        {{- if $line }}
+        <p class="home-tagline-line">{{ $line }}</p>
+        {{- end }}
+        {{- end }}
+      </div>
+      {{- end }}
+      {{- with $hero.description }}
+      <div class="home-description">
+        {{ . | markdownify }}
+      </div>
+      {{- end }}
+      {{- with $hero.actions }}
+      <div class="home-actions">
+        {{- range . }}
+        <a class="home-action {{ if eq .style "secondary" }}secondary{{ else }}primary{{ end }}" href="{{ .url | absURL }}">
+          {{ .name }}
+        </a>
+        {{- end }}
+      </div>
+      {{- end }}
+    </div>
+
+    <aside class="home-hero-side">
+      {{- with $hero.avatar }}
+      <div class="hero-visual">
+        <img class="hero-avatar" src="{{ . | absURL }}" alt="{{ $heroTitle }}" loading="eager">
+      </div>
+      {{- end }}
+
+      <div class="hero-status-bar">
+        {{- with $hero.status }}
+        <span class="hero-meta-pill">{{ . }}</span>
+        {{- end }}
+        {{- with $hero.location }}
+        <span class="hero-meta-pill">{{ . }}</span>
+        {{- end }}
+        {{- with $heroContact }}
+        <a class="hero-meta-pill hero-contact-chip" href="mailto:{{ . }}" aria-label="发送邮件至 {{ . }}">
+          <span class="hero-contact-label">Email</span>
+          <span class="hero-contact-value">{{ . }}</span>
+        </a>
+        {{- end }}
+      </div>
+
+      <div class="hero-side-copy">
+        {{- with $hero.sideNote }}
+        <p>{{ . | markdownify }}</p>
+        {{- end }}
+      </div>
+
+      <ul class="hero-facts">
+        <li>
+          <strong>{{ $postCount }}</strong>
+          <span>笔记</span>
+        </li>
+        <li>
+          <strong>{{ $categoryCount }}</strong>
+          <span>主题</span>
+        </li>
+        <li>
+          <strong>{{ $seriesCount }}</strong>
+          <span>连载</span>
+        </li>
+      </ul>
+    </aside>
+  </article>
+
+  {{- partial "focus_tracks.html" . }}
+
+  <section class="home-posts">
+    <header class="section-heading">
+      <div>
+        <p class="section-kicker">Recent Notes</p>
+        <h2>最近更新</h2>
+      </div>
+      <a class="section-link" href="{{ "/archives/" | absURL }}">查看归档</a>
+    </header>
+
+    {{- if gt (len $paginator.Pages) 0 }}
+    <div class="home-post-list">
+      {{- range $paginator.Pages }}
+      {{- partial "note_card.html" (dict "page" . "class" "home-post-entry") }}
+      {{- end }}
+    </div>
+    {{- else }}
+    <div class="empty-state">
+      <h3>第一篇文章正在路上</h3>
+      <p>在 <code>content/posts/</code> 下新增文章后，这里会自动展示最新内容。</p>
+    </div>
+    {{- end }}
+  </section>
+
+  {{- if gt $paginator.TotalPages 1 }}
+  <footer class="page-footer">
+    <nav class="pagination">
+      {{- if $paginator.HasPrev }}
+      <a class="prev" href="{{ $paginator.Prev.URL | absURL }}">
+        «&nbsp;{{ i18n "prev_page" }}&nbsp;
+        {{- if (.Param "ShowPageNums") }}
+        {{- sub $paginator.PageNumber 1 }}/{{ $paginator.TotalPages }}
+        {{- end }}
+      </a>
+      {{- end }}
+      {{- if $paginator.HasNext }}
+      <a class="next" href="{{ $paginator.Next.URL | absURL }}">
+        {{- i18n "next_page" }}&nbsp;
+        {{- if (.Param "ShowPageNums") }}
+        {{- add 1 $paginator.PageNumber }}/{{ $paginator.TotalPages }}
+        {{- end }}&nbsp;»
+      </a>
+      {{- end }}
+    </nav>
+  </footer>
+  {{- end }}
+</section>
+
+{{- end }}

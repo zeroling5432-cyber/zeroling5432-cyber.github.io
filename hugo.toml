@@ -1,0 +1,126 @@
+baseURL = 'https://zeroling5432.top/'
+title = '个人博客'
+theme = 'PaperMod'
+enableRobotsTXT = true
+hasCJKLanguage = true
+defaultContentLanguage = 'zh'
+
+[pagination]
+pagerSize = 6
+
+[taxonomies]
+tag = 'tags'
+category = 'categories'
+series = 'series'
+
+[languages.zh]
+languageName = '简体中文'
+languageCode = 'zh-CN'
+weight = 1
+title = "Zeroling's Space"
+
+[params]
+description = '记录数学札记、技术博客与兴趣爱好，把零散吸收过程整理成能长期回看的内容。'
+keywords = ['博客', '数学札记', '技术博客', '兴趣爱好', 'Hugo', 'PaperMod']
+author = 'zeroling'
+defaultTheme = 'auto'
+DateFormat = '2006-01-02'
+ShowReadingTime = true
+ShowWordCount = true
+ShowShareButtons = false
+ShowPostNavLinks = true
+ShowBreadCrumbs = true
+ShowCodeCopyButtons = true
+ShowToc = true
+ShowRssButtonInSectionTermList = true
+disableSpecial1stPost = true
+mainSections = ['posts']
+
+[params.label]
+text = 'MyBlog'
+tagline = 'Study, Reading, Travel.'
+
+[params.hero]
+greeting = '爱与生活，均是勇敢者的奖赏。'
+title = "Zeroling's Space"
+subtitle = """
+正反散射问题｜共振问题｜高分辨率成像｜计算神经科学
+神经网络｜大语言模型｜混合精度训练｜评测体系构建
+量化金融｜宏观分析
+"""
+description = """
+怀抱梦想，持续努力，继续进化
+在人生的每个阶段充分发挥自己的潜能💗
+"""
+avatar = '/images/Personal.jpg'
+status = 'ZJU'
+location = 'Hangzhou, China'
+contact = 'zeroling5432@gmail.com'
+sideNote = '技术分享、持续阅读、阶段性复盘，记录生活细节'
+
+[[params.hero.actions]]
+name = '浏览笔记'
+url = '/posts/'
+style = 'primary'
+
+[[params.hero.actions]]
+name = '关于本站'
+url = '/about/'
+style = 'secondary'
+
+[params.footer]
+motto = '爱与生活，均是勇敢者的奖赏。'
+
+[[params.noteKinds]]
+name = '数学札记'
+eyebrow = 'Math Notes'
+summary = '论文阅读、知识整理'
+detail = 'All about Mathematics'
+
+[[params.noteKinds]]
+name = '技术博客'
+eyebrow = 'Tech Blog'
+summary = '热点追踪、技术复盘'
+detail = 'CS and Quant'
+
+[[params.noteKinds]]
+name = '兴趣爱好'
+eyebrow = 'Interests'
+summary = '体育生、流浪汉、酒鬼'
+detail = "ENFP Persona"
+
+[[params.footer.links]]
+name = '归档'
+url = '/archives/'
+
+[[params.footer.links]]
+name = '连载'
+url = '/series/'
+
+[[params.footer.links]]
+name = '关于'
+url = '/about/'
+
+[[menu.main]]
+identifier = 'posts'
+name = '笔记'
+url = '/posts/'
+weight = 10
+
+[[menu.main]]
+identifier = 'categories'
+name = '分类'
+url = '/categories/'
+weight = 20
+
+[[menu.main]]
+identifier = 'tags'
+name = '标签'
+url = '/tags/'
+weight = 30
+
+[[menu.main]]
+identifier = 'about'
+name = '关于'
+url = '/about/'
+weight = 40

@@ -1,0 +1,62 @@
+{{- define "main" }}
+
+{{- $terms := .Data.Terms.Alphabetical }}
+
+<section class="page-shell terms-shell">
+  <header class="page-hero glass-panel">
+    <div class="page-hero-copy">
+      {{- partial "breadcrumbs.html" . }}
+      <p class="section-kicker">Index View</p>
+      <h1>{{ .Title }}</h1>
+      {{- if .Description }}
+      <div class="page-description">
+        {{ .Description | markdownify }}
+      </div>
+      {{- else }}
+      <div class="page-description">
+        <p>这里按索引维度浏览内容，方便从主题、关键词或连载入口回到具体文章。</p>
+      </div>
+      {{- end }}
+    </div>
+
+    <div class="page-hero-meta">
+      <div class="page-stat">
+        <strong>{{ len $terms }}</strong>
+        <span>个条目</span>
+      </div>
+      <div class="page-stat">
+        <strong>{{ len site.RegularPages }}</strong>
+        <span>篇页面</span>
+      </div>
+      <div class="page-stat">
+        <strong>{{ len site.Taxonomies.series }}</strong>
+        <span>连载主题</span>
+      </div>
+    </div>
+  </header>
+
+  {{- if gt (len $terms) 0 }}
+  <div class="terms-grid">
+    {{- $type := .Type }}
+    {{- range $terms }}
+    {{- $name := .Name }}
+    {{- $count := .Count }}
+    {{- with site.GetPage (printf "/%s/%s" $type $name) }}
+    <a class="term-card glass-panel" href="{{ .Permalink }}">
+      <p class="term-kicker">{{ $.Title }}</p>
+      <h2>{{ .LinkTitle }}</h2>
+      <p>{{ $count }} 篇相关内容</p>
+      <span>查看归档</span>
+    </a>
+    {{- end }}
+    {{- end }}
+  </div>
+  {{- else }}
+  <div class="empty-state glass-panel">
+    <h3>这里还没有索引项</h3>
+    <p>等新的分类、标签或连载出现后，这里会自动整理出来。</p>
+  </div>
+  {{- end }}
+</section>
+
+{{- end }}
