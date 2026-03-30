@@ -8,4 +8,5 @@ categories = ['个人博客']
 tags = []
 series = []
 ShowToc = true
+math = true
 +++
